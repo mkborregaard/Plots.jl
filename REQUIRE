@@ -4,8 +4,8 @@ RecipesBase
 PlotUtils 0.4.1
 PlotThemes 0.1.3
 Reexport
-FixedSizeArrays
 Measures
 Showoff
 StatsBase 0.14.0
+StaticArrays
 JSON
