@@ -834,13 +834,15 @@ function push_z!(series::Series, zi)
 end
 
 function Base.push!(series::Series, yi)
-    x = extendSeriesByOne(series[:x])
-    expand_extrema!(series[:subplot][:xaxis], x[end])
-    series[:x] = x
+    if length(series[:x]) == length(series[:y])
+        x = extendSeriesByOne(series[:x])
+        expand_extrema!(series[:subplot][:xaxis], x[end])
+        series[:x] = x
+    end
     push_y!(series, yi)
 end
-Base.push!(series::Series, xi, yi) = (push_x!(series,xi); push_y!(series,yi))
-Base.push!(series::Series, xi, yi, zi) = (push_x!(series,xi); push_y!(series,yi); push_z!(series,zi))
+Base.push!(series::Series, xi, yi) = (if length(series[:x]) == length(series[:y]) push_x!(series,xi) end; push_y!(series,yi))
+Base.push!(series::Series, xi, yi, zi) = (if length(series[:x]) == length(series[:z]) push_x!(series,xi) end; if length(series[:y]) == length(series[:z]) push_y!(series,yi) end; push_z!(series,zi))
 
 # -------------------------------------------------------
 
@@ -882,7 +884,8 @@ Base.push!(plt::Plot, x::Real, y::Real, z::Real) = push!(plt, 1, x, y, z)
 # y only
 function Base.push!(plt::Plot, i::Integer, y::Real)
     xdata, ydata = getxy(plt, i)
-    setxy!(plt, (extendSeriesByOne(xdata), extendSeriesData(ydata, y)), i)
+    newxdata = length(xdata) == length(ydata) ? extendSeriesByOne(xdata, length(y)) : xdata
+    setxy!(plt, (newxdata, extendSeriesData(ydata, y)), i)
     plt
 end
 function Base.append!(plt::Plot, i::Integer, y::AVec)
@@ -890,7 +893,9 @@ function Base.append!(plt::Plot, i::Integer, y::AVec)
     if !isa(xdata, UnitRange{Int})
         error("Expected x is a UnitRange since you're trying to push a y value only")
     end
-    plt[i] = (extendSeriesByOne(xdata, length(y)), extendSeriesData(ydata, y))
+    newxdata = length(xdata) == length(ydata) ? extendSeriesByOne(xdata, length(y)) : xdata
+
+    plt[i] = (newxdata, extendSeriesData(ydata, y))
     plt
 end
 
@@ -943,7 +948,13 @@ end
 # push y[i] to the ith series
 # same x for each series
 function Base.push!(plt::Plot, x::Real, y::AVec)
-    push!(plt, [x], y)
+    push!(plt, 1, x, y[1])
+    ny = length(y)
+    if ny > 1 && plt.n > 1
+      for i in 2:plt.n
+          push!(plt, i, y[mod1(i,ny)])
+      end
+    end
 end
 
 # push (x[i], y[i]) to the ith series
@@ -966,9 +977,6 @@ function Base.push!(plt::Plot, x::AVec, y::AVec, z::AVec)
     end
     plt
 end
-
-
-
 
 # ---------------------------------------------------------------
 
