@@ -1181,7 +1181,7 @@ function _display(plt::Plot{GLVisualizeBackend}, visible = true)
             if haskey(d, :hover) && !(d[:hover] in (false, :none, nothing))
                 hover(vis, d[:hover], sp_screen)
             end
-            if isdefined(:GLPlot) && isdefined(Main.GLPlot, :(register_plot!))
+            if @isdefined(GLPlot) && isdefined(Main.GLPlot, :(register_plot!))
                 del_signal = Main.GLPlot.register_plot!(vis, sp_screen, create_gizmo=false)
                 append!(_glplot_deletes, del_signal)
             end
