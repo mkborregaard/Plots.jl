@@ -169,7 +169,7 @@ function _initialize_backend(::HDF5Backend)
                 "AXIS" => Axis,
                 "SURFACE" => Surface,
                 "SUBPLOT" => Subplot,
-                "NULLABLE" => Nullable,
+                "NULLABLE" => Union{AbstractPlot, Nothing},
             )
             merge!(HDF5PLOT_MAP_STR2TELEM, telem2str)
             merge!(HDF5PLOT_MAP_TELEM2STR, Dict{Type, String}(v=>k for (k,v) in HDF5PLOT_MAP_STR2TELEM))
@@ -413,8 +413,8 @@ function _hdf5plot_gwrite(grp, k::String, v::Surface)
 	_hdf5plot_gwrite(grp, "data2d", v.surf)
 	_hdf5plot_writetype(grp, Surface)
 end
-#TODO: "Properly" support Nullable using _hdf5plot_writetype?
-function _hdf5plot_gwrite(grp, k::String, v::Nullable)
+#TODO: "Properly" support Nothing using _hdf5plot_writetype?
+function _hdf5plot_gwrite(grp, k::String, v::Union{AbstractPlot, Nothing})
     if isnull(v)
         _hdf5plot_gwrite(grp, k, nothing)
     else
