@@ -468,7 +468,7 @@ function series_annotations(strs::AbstractVector, args...)
     SeriesAnnotations(strs, fnt, shp, scalefactor)
 end
 series_annotations(anns::SeriesAnnotations) = anns
-series_annotations(::Void) = nothing
+series_annotations(::Nothing) = nothing
 
 function series_annotations_shapes!(series::Series, scaletype::Symbol = :pixels)
     anns = series[:series_annotations]
@@ -531,7 +531,7 @@ function Base.next(ea::EachAnn, i)
     ((_cycle(ea.x,i), _cycle(ea.y,i), str, fnt), i+1)
 end
 
-annotations(::Void) = []
+annotations(::Nothing) = []
 annotations(anns::AVec) = anns
 annotations(anns) = Any[anns]
 annotations(sa::SeriesAnnotations) = sa

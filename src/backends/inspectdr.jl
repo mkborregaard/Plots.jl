@@ -171,8 +171,8 @@ function _initialize_backend(::InspectDRBackend; kw...)
         )
 
         mutable struct InspecDRPlotRef
-            mplot::Union{Void, InspectDR.Multiplot}
-            gui::Union{Void, InspectDR.GtkPlot}
+            mplot::Union{Nothing, InspectDR.Multiplot}
+            gui::Union{Nothing, InspectDR.GtkPlot}
         end
 
         _inspectdr_getmplot(::Any) = nothing
@@ -506,7 +506,7 @@ const _inspectdr_mimeformats_nodpi = Dict(
 #    "application/postscript"  => "ps", #TODO: support once Cairo supports PSSurface
     "application/pdf"         => "pdf"
 )
-_inspectdr_show(io::IO, mime::MIME, ::Void, w, h) =
+_inspectdr_show(io::IO, mime::MIME, ::Nothing, w, h) =
     throw(ErrorException("Cannot show(::IO, ...) plot - not yet generated"))
 function _inspectdr_show(io::IO, mime::MIME, mplot, w, h)
     InspectDR._show(io, mime, mplot, Float64(w), Float64(h))

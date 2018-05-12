@@ -39,7 +39,7 @@ struct HDF5PlotNative; end #Indentifies a data element that can natively be hand
 struct HDF5CTuple; end #Identifies a "complex" tuple structure
 
 mutable struct HDF5Plot_PlotRef
-	ref::Union{Plot, Void}
+	ref::Union{Plot, Nothing}
 end
 
 
@@ -148,7 +148,7 @@ function _initialize_backend(::HDF5Backend)
             #Possible element types of high-level data types:
             const telem2str = Dict{String, Type}(
                 "NATIVE" => HDF5PlotNative,
-                "VOID" => Void,
+                "VOID" => Nothing,
                 "BOOL" => Bool,
                 "SYMBOL" => Symbol,
                 "TUPLE" => Tuple,
@@ -319,9 +319,9 @@ function _hdf5plot_gwrite(grp, k::String, v::Array{Any})
     warn("Cannot write Array: $k=$v")
 end
 =#
-function _hdf5plot_gwrite(grp, k::String, v::Void)
+function _hdf5plot_gwrite(grp, k::String, v::Nothing)
     grp[k] = 0
-    _hdf5plot_writetype(grp, k, Void)
+    _hdf5plot_writetype(grp, k, Nothing)
 end
 function _hdf5plot_gwrite(grp, k::String, v::Bool)
     grp[k] = Int(v)
@@ -489,7 +489,7 @@ function _hdf5plot_readcount(grp) #Read directly from group
 end
 
 _hdf5plot_convert(T::Type{HDF5PlotNative}, v) = v
-_hdf5plot_convert(T::Type{Void}, v) = nothing
+_hdf5plot_convert(T::Type{Nothing}, v) = nothing
 _hdf5plot_convert(T::Type{Bool}, v) = (v!=0)
 _hdf5plot_convert(T::Type{Symbol}, v) = Symbol(v)
 _hdf5plot_convert(T::Type{Tuple}, v) = tuple(v...) #With Vector{T<:Number}

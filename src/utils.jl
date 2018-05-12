@@ -255,7 +255,7 @@ float_extended_type(x::AbstractArray{T}) where {T<:Real} = Float64
 nop() = nothing
 notimpl() = error("This has not been implemented yet")
 
-isnothing(x::Void) = true
+isnothing(x::Nothing) = true
 isnothing(x) = false
 
 _cycle(wrapper::InputWrapper, idx::Int) = wrapper.obj
@@ -828,7 +828,7 @@ extendSeriesData(v::AVec{T}, z::AVec) where {T}         = (append!(v, convert(Ve
 # NOTE: backends should implement the following methods to get/set the x/y/z data objects
 
 tovec(v::AbstractVector) = v
-tovec(v::Void) = zeros(0)
+tovec(v::Nothing) = zeros(0)
 
 function getxy(plt::Plot, i::Integer)
     d = plt.series_list[i].d

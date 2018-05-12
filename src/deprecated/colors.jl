@@ -51,7 +51,7 @@ convertColor(c::Symbol) = parse(Colorant, string(c))
 convertColor(c::Colorant) = c
 convertColor(cvec::AbstractVector) = map(convertColor, cvec)
 convertColor(c::ColorScheme) = c
-convertColor(v::Void) = RGBA(0,0,0,0)
+convertColor(v::Nothing) = RGBA(0,0,0,0)
 convertColor(b::Bool) = b ? RGBA(0,0,0,1) : RGBA(0,0,0,0)
 
 function convertColor(c, α::Real)
@@ -59,7 +59,7 @@ function convertColor(c, α::Real)
   RGBA(RGB(getColor(c)), α)
 end
 convertColor(cs::AVec, α::Real) = map(c -> convertColor(c, α), cs)
-convertColor(c, α::Void) = convertColor(c)
+convertColor(c, α::Nothing) = convertColor(c)
 
 # backup... try to convert
 getColor(c) = convertColor(c)
@@ -247,7 +247,7 @@ ColorWrapper(s::Symbol; alpha = nothing) = ColorWrapper(convertColor(parse(Color
 
 getColor(scheme::ColorWrapper, idx::Int) = scheme.c
 getColorZ(scheme::ColorWrapper, z::Real) = scheme.c
-convertColor(c::ColorWrapper, α::Void) = c.c
+convertColor(c::ColorWrapper, α::Nothing) = c.c
 
 # --------------------------------------------------------------
 
