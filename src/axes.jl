@@ -250,11 +250,11 @@ function get_ticks(axis::Axis)
         # discrete ticks...
         n = length(dvals)
         rng = if ticks == :auto
-            Int[round(Int,i) for i in linspace(1, n, 15)]
+            Int[round(Int,i) for i in range(1; stop=n, length=15)]
         elseif ticks == :all
             1:n
         elseif typeof(ticks) <: Int
-            Int[round(Int,i) for i in linspace(1, n, ticks)]
+            Int[round(Int,i) for i in range(1; stop=n, length=ticks)]
         end
         axis[:continuous_values][rng], dvals[rng]
     elseif typeof(ticks) <: Symbol
@@ -307,7 +307,7 @@ function expand_extrema!(axis::Axis, v::Number)
 end
 
 # these shouldn't impact the extrema
-expand_extrema!(axis::Axis, ::Void) = axis[:extrema]
+expand_extrema!(axis::Axis, ::Nothing) = axis[:extrema]
 expand_extrema!(axis::Axis, ::Bool) = axis[:extrema]
 
 

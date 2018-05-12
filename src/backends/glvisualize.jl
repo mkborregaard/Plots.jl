@@ -397,7 +397,7 @@ function gappy(x, ps)
     return last(ps) - x
 end
 function ticks(points, resolution)
-    Float16[gappy(x, points) for x = linspace(first(points),last(points), resolution)]
+    Float16[gappy(x, points) for x in range(first(points); stop=last(points), length=resolution)]
 end
 
 
@@ -901,7 +901,7 @@ function gl_boxplot(d, kw_args)
         # filter y
         values = y[filter(i -> _cycle(x,i) == glabel, 1:length(y))]
         # compute quantiles
-        q1,q2,q3,q4,q5 = quantile(values, linspace(0,1,5))
+        q1,q2,q3,q4,q5 = quantile(values, range(0; stop=1, length=5))
         # notch
         n = Plots.notch_width(q2, q4, length(values))
         # warn on inverted notches?
@@ -1181,7 +1181,7 @@ function _display(plt::Plot{GLVisualizeBackend}, visible = true)
             if haskey(d, :hover) && !(d[:hover] in (false, :none, nothing))
                 hover(vis, d[:hover], sp_screen)
             end
-            if isdefined(:GLPlot) && isdefined(Main.GLPlot, :(register_plot!))
+            if @isdefined(GLPlot) && isdefined(Main.GLPlot, :(register_plot!))
                 del_signal = Main.GLPlot.register_plot!(vis, sp_screen, create_gizmo=false)
                 append!(_glplot_deletes, del_signal)
             end

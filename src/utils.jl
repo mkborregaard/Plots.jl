@@ -4,7 +4,7 @@ calcMidpoints(edges::AbstractVector) = Float64[0.5 * (edges[i] + edges[i+1]) for
 "Make histogram-like bins of data"
 function binData(data, nbins)
   lo, hi = ignorenan_extrema(data)
-  edges = collect(linspace(lo, hi, nbins+1))
+  edges = collect(range(lo; stop=hi, length=nbins+1))
   midpoints = calcMidpoints(edges)
   buckets = Int[max(2, min(searchsortedfirst(edges, x), length(edges)))-1 for x in data]
   counts = zeros(Int, length(midpoints))
@@ -119,7 +119,7 @@ function replace_image_with_heatmap(z::Array{T}) where T<:Colorant
     n, m = size(z)
     # idx = 0
     colors = ColorGradient(vec(z))
-    newz = reshape(linspace(0, 1, n*m), n, m)
+    newz = reshape(range(0; stop=1, length=n*m), n, m)
     newz, colors
     # newz = zeros(n, m)
     # for i=1:n, j=1:m
@@ -255,7 +255,7 @@ float_extended_type(x::AbstractArray{T}) where {T<:Real} = Float64
 nop() = nothing
 notimpl() = error("This has not been implemented yet")
 
-isnothing(x::Void) = true
+isnothing(x::Nothing) = true
 isnothing(x) = false
 
 _cycle(wrapper::InputWrapper, idx::Int) = wrapper.obj
@@ -828,7 +828,7 @@ extendSeriesData(v::AVec{T}, z::AVec) where {T}         = (append!(v, convert(Ve
 # NOTE: backends should implement the following methods to get/set the x/y/z data objects
 
 tovec(v::AbstractVector) = v
-tovec(v::Void) = zeros(0)
+tovec(v::Nothing) = zeros(0)
 
 function getxy(plt::Plot, i::Integer)
     d = plt.series_list[i].d
