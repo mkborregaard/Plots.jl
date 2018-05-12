@@ -58,7 +58,7 @@ end
 
 "get an array of tuples of points on a circle with radius `r`"
 function partialcircle(start_θ, end_θ, n = 20, r=1)
-    Tuple{Float64,Float64}[(r*cos(u),r*sin(u)) for u in linspace(start_θ, end_θ, n)]
+    Tuple{Float64,Float64}[(r*cos(u),r*sin(u)) for u in range(start_θ; stop=end_θ, length=n)]
 end
 
 "interleave 2 vectors into each other (like a zipper's teeth)"
@@ -747,7 +747,7 @@ end
 
 @deprecate curve_points coords
 
-coords(curve::BezierCurve, n::Integer = 30; range = [0,1]) = map(curve, linspace(range..., n))
+coords(curve::BezierCurve, n::Integer = 30; range = [0,1]) = map(curve, range(first(range); stop=last(range), length=n))
 
 # build a BezierCurve which leaves point p vertically upwards and arrives point q vertically upwards.
 # may create a loop if necessary.  Assumes the view is [0,1]
