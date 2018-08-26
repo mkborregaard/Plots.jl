@@ -3,8 +3,6 @@
 
 # significant contributions by @jheinen
 
-GR.is_plots() = true
-
 const _gr_attr = merge_with_base_supported([
     :annotations,
     :background_color_legend, :background_color_inside, :background_color_outside,
@@ -66,6 +64,8 @@ end
 
 import GR
 export GR
+
+GR.isplots() = true
 
 # --------------------------------------------------------------------------------------
 
